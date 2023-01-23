@@ -1,3 +1,34 @@
+import 'dart:math' show pow;
+
+Color _scaleAlpha(Color a, double factor) {
+  return a.withAlpha((a.alpha * factor).round().clamp(0, 255));
+}
+
+/// Linearly interpolate between two doubles.
+///
+/// Same as [lerpDouble] but specialized for non-null `double` type.
+double _lerpDouble(double a, double b, double t) {
+  return a * (1.0 - t) + b * t;
+}
+
+/// Linearly interpolate between two integers.
+///
+/// Same as [lerpDouble] but specialized for non-null `int` type.
+double _lerpInt(int a, int b, double t) {
+  return a + (b - a) * t;
+}
+
+/// Same as [num.clamp] but specialized for non-null [int].
+int _clampInt(int value, int min, int max) {
+  assert(min <= max);
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
+}
 
 /// An immutable 32 bit color value in ARGB format.
 ///
@@ -61,11 +92,12 @@ class Color {
   ///
   /// See also [fromRGBO], which takes the alpha value as a floating point
   /// value.
-  const Color.fromARGB(int a, int r, int g, int b) :
-    value = (((a & 0xff) << 24) |
-             ((r & 0xff) << 16) |
-             ((g & 0xff) << 8)  |
-             ((b & 0xff) << 0)) & 0xFFFFFFFF;
+  const Color.fromARGB(int a, int r, int g, int b)
+      : value = (((a & 0xff) << 24) |
+                ((r & 0xff) << 16) |
+                ((g & 0xff) << 8) |
+                ((b & 0xff) << 0)) &
+            0xFFFFFFFF;
 
   /// Create a color from red, green, blue, and opacity, similar to `rgba()` in CSS.
   ///
@@ -78,11 +110,12 @@ class Color {
   /// Out of range values are brought into range using modulo 255.
   ///
   /// See also [fromARGB], which takes the opacity as an integer value.
-  const Color.fromRGBO(int r, int g, int b, double opacity) :
-    value = ((((opacity * 0xff ~/ 1) & 0xff) << 24) |
-              ((r                    & 0xff) << 16) |
-              ((g                    & 0xff) << 8)  |
-              ((b                    & 0xff) << 0)) & 0xFFFFFFFF;
+  const Color.fromRGBO(int r, int g, int b, double opacity)
+      : value = ((((opacity * 0xff ~/ 1) & 0xff) << 24) |
+                ((r & 0xff) << 16) |
+                ((g & 0xff) << 8) |
+                ((b & 0xff) << 0)) &
+            0xFFFFFFFF;
 
   /// A 32 bit value representing this color.
   ///
@@ -158,9 +191,8 @@ class Color {
 
   // See <https://www.w3.org/TR/WCAG20/#relativeluminancedef>
   static double _linearizeColorComponent(double component) {
-    if (component <= 0.03928)
-      return component / 12.92;
-    return math.pow((component + 0.055) / 1.055, 2.4) as double;
+    if (component <= 0.03928) return component / 12.92;
+    return pow((component + 0.055) / 1.055, 2.4) as double;
   }
 
   /// Returns a brightness value between 0 for darkest and 1 for lightest.
@@ -231,19 +263,22 @@ class Color {
   /// overlay each other: instead, just paint one with the combined color.
   static Color alphaBlend(Color foreground, Color background) {
     final int alpha = foreground.alpha;
-    if (alpha == 0x00) { // Foreground completely transparent.
+    if (alpha == 0x00) {
+      // Foreground completely transparent.
       return background;
     }
     final int invAlpha = 0xff - alpha;
     int backAlpha = background.alpha;
-    if (backAlpha == 0xff) { // Opaque background case
+    if (backAlpha == 0xff) {
+      // Opaque background case
       return Color.fromARGB(
         0xff,
         (alpha * foreground.red + invAlpha * background.red) ~/ 0xff,
         (alpha * foreground.green + invAlpha * background.green) ~/ 0xff,
         (alpha * foreground.blue + invAlpha * background.blue) ~/ 0xff,
       );
-    } else { // General case
+    } else {
+      // General case
       backAlpha = (backAlpha * invAlpha) ~/ 0xff;
       final int outAlpha = alpha + backAlpha;
       assert(outAlpha != 0x00);
@@ -266,12 +301,9 @@ class Color {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other))
-      return true;
-    if (other.runtimeType != runtimeType)
-      return false;
-    return other is Color
-        && other.value == value;
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+    return other is Color && other.value == value;
   }
 
   @override

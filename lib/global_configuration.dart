@@ -1,8 +1,9 @@
 library global_configuration;
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:global_configuration/color.dart'; //todo: should we use https://pub.dev/packages/color instead?
+//import 'package:global_configuration/color.dart'; //todo: should we use https://pub.dev/packages/color instead?
 
 ///
 /// Class for managing different configuration.
