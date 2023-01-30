@@ -1,9 +1,9 @@
 library global_configuration;
 
-import 'package:global_configuration/color.dart';
+import 'stub.dart' if (dart.library.io) 'file.dart';
+import 'package:global_configuration/color.dart'; //todo: should we use https://pub.dev/packages/color instead?
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:global_configuration/color.dart'; //todo: should we use https://pub.dev/packages/color instead?
 
 ///
 /// Class for managing different configuration.
@@ -52,28 +52,28 @@ class GlobalConfiguration {
     Map<String, dynamic> configAsMap = json.decode(content);
     appConfig.addAll(configAsMap);
     return _singleton;
-  } */
-
+  } 
+*/
   ///
   /// Loading a json configuration file from a custom [path] into the current app config.
   ///
-/*   Future<GlobalConfiguration> loadFromPath(String path) async {
-    String content = await rootBundle.loadString(path);
+  Future<GlobalConfiguration> loadFromPath(String path) async {
+    String content = await loadString(path);
     Map<String, dynamic> configAsMap = json.decode(content);
     appConfig.addAll(configAsMap);
     return _singleton;
-  } */
+  }
 
   ///
   /// Loading a json configuration file from a custom [path] into the current app config with the given [key].
   ///
-/*   Future<GlobalConfiguration> loadFromPathIntoKey(
+  Future<GlobalConfiguration> loadFromPathIntoKey(
       String path, String key) async {
-    String content = await rootBundle.loadString(path);
+    String content = await loadString(path);
     Map<String, dynamic> configAsMap = json.decode(content);
     appConfig.putIfAbsent(key, () => configAsMap);
     return _singleton;
-  } */
+  }
 
   ///
   /// Loading a configuration file from the given [url] into the current app config using
