@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   flutter:
-    sdk: flutter
+    sdk: dart
   http: ^0.13.5
 
 dev_dependencies:
