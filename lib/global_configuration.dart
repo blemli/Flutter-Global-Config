@@ -58,7 +58,7 @@ class GlobalConfiguration {
   /// Loading a json configuration file from a custom [path] into the current app config.
   ///
   Future<GlobalConfiguration> loadFromPath(String path) async {
-    String content = await loadString(path);
+    String content = loadString(path);
     Map<String, dynamic> configAsMap = json.decode(content);
     appConfig.addAll(configAsMap);
     return _singleton;
@@ -69,7 +69,7 @@ class GlobalConfiguration {
   ///
   Future<GlobalConfiguration> loadFromPathIntoKey(
       String path, String key) async {
-    String content = await loadString(path);
+    String content = loadString(path);
     Map<String, dynamic> configAsMap = json.decode(content);
     appConfig.putIfAbsent(key, () => configAsMap);
     return _singleton;

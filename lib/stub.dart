@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart';
-
-Future<String> loadString(path) async {
+String loadString(path) {
   throw Exception('Not implemented');
 }
